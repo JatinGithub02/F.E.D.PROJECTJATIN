@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Code Editor</title>
+    <style>
+        /* CSS styles for layout and appearance */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            display: flex;
+            height: 100vh; /* Fill the entire height of the viewport */
+        }
+        .editor-panel {
+            flex: 1; /* Each editor panel takes up an equal amount of space */
+            height: 100%;
+            overflow: auto; /* Enable scrolling for large code */
+            padding: 10px;
+            border-right: 1px solid #ccc; /* Separate each editor panel with a vertical border */
+        }
+        .editor {
+            width: 100%;
+            height: 100%;
+            border: none;
+            resize: none; /* Prevent resizing of the editor */
+            padding: 10px;
+            box-sizing: border-box; /* Include padding in width and height calculation */
+        }
+        .result-panel {
+            flex: 1; /* Result panel takes up remaining space */
+            height: 100%;
+            padding: 10px;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HTML Editor Panel -->
+        <div class="editor-panel">
+            <h2>HTML</h2>
+            <textarea id="html-editor" class="editor" placeholder="Write your HTML code here..."></textarea>
+        </div>
+        
+        <!-- CSS Editor Panel -->
+        <div class="editor-panel">
+            <h2>CSS</h2>
+            <textarea id="css-editor" class="editor" placeholder="Write your CSS code here..."></textarea>
+        </div>
+        
+        <!-- JavaScript Editor Panel -->
+        <div class="editor-panel">
+            <h2>JavaScript</h2>
+            <textarea id="js-editor" class="editor" placeholder="Write your JavaScript code here..."></textarea>
+        </div>
+        
+        <!-- Result Panel -->
+        <div class="result-panel">
+            <h2>Result</h2>
+            <iframe id="result-frame"></iframe> <!-- Result displayed in an iframe -->
+        </div>
+    </div>
+
+    <script>
+        // Function to update the result iframe with user's code
+        function updateResult() {
+            // Get the code from HTML, CSS, and JavaScript editors
+            var htmlCode = document.getElementById('html-editor').value;
+            var cssCode = document.getElementById('css-editor').value;
+            var jsCode = document.getElementById('js-editor').value;
+            var resultFrame = document.getElementById('result-frame'); // Get the iframe element
+            var resultDocument = resultFrame.contentDocument || resultFrame.contentWindow.document; // Get the document inside the iframe
+            
+            // Write HTML, CSS, and JavaScript to the result iframe
+            resultDocument.open(); // Open the document inside the iframe
+            resultDocument.write(`
+                <html>
+                    <head>
+                        <style>${cssCode}</style> <!-- Inject CSS code -->
+                    </head>
+                    <body>${htmlCode}</body> <!-- Inject HTML code -->
+                    <script>${jsCode}</script> <!-- Inject JavaScript code -->
+                </html>
+            `);
+            resultDocument.close(); // Close the document inside the iframe
+        }
+
+        // Add event listeners to HTML, CSS, and JavaScript editors
+        document.getElementById('html-editor').addEventListener('input', updateResult);
+        document.getElementById('css-editor').addEventListener('input', updateResult);
+        document.getElementById('js-editor').addEventListener('input', updateResult);
+
+        // Initial update of result iframe
+        updateResult();
+    </script>
+</body>
+</html>
